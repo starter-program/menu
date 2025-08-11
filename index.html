@@ -5,26 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>浏览器首页</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        :root {
+            --primary-bg: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --text-color: #333;
+            --text-secondary: rgba(0, 0, 0, 0.7);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            --primary-color: #007AFF;
+            --accent-color: #34C759;
+            --icon-bg: rgba(0, 0, 0, 0.03);
+            --link-hover-bg: rgba(255, 255, 255, 0.8);
+            --setting-panel-bg: rgba(255, 255, 255, 0.85);
+            --header-height: 80px;
+            --sidebar-width: 300px;
+        }
+        
+        .dark-mode {
+            --primary-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --glass-bg: rgba(30, 30, 40, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-color: #f0f0f0;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --primary-color: #0A84FF;
+            --accent-color: #30D158;
+            --icon-bg: rgba(255, 255, 255, 0.05);
+            --link-hover-bg: rgba(50, 50, 60, 0.8);
+            --setting-panel-bg: rgba(30, 30, 40, 0.9);
         }
         
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
-            color: #333;
-            padding: 20px;
+            background: var(--primary-bg);
+            color: var(--text-color);
+            padding: 15px;
             position: relative;
             overflow-x: hidden;
+            transition: background 0.5s ease, color 0.3s ease;
         }
         
         /* 液态玻璃效果层 */
         .glass-layer {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -33,7 +65,11 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: -1;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .dark-mode .glass-layer {
+            background: rgba(20, 20, 30, 0.7);
         }
         
         .container {
@@ -41,46 +77,89 @@
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 20px;
             position: relative;
             z-index: 1;
         }
         
         header {
             text-align: center;
-            padding: 30px 0 20px;
+            padding: 15px 0 10px;
+            position: relative;
         }
         
         .logo {
-            font-size: 2.8rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: rgba(0, 0, 0, 0.8);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-color);
             letter-spacing: -1px;
+            background: linear-gradient(45deg, #007AFF, #00C6FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
         
         .tagline {
-            font-size: 1.2rem;
+            font-size: 1rem;
             opacity: 0.7;
-            margin-top: 5px;
             font-weight: 300;
+            color: var(--text-secondary);
+        }
+        
+        .mobile-header {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .mobile-header .logo {
+            font-size: 1.8rem;
+            margin-bottom: 0;
+        }
+        
+        .mobile-nav {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .settings-btn {
+            background: var(--icon-bg);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .settings-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: rotate(30deg);
         }
         
         .search-section {
-            background: rgba(255, 255, 255, 0.65);
+            background: var(--glass-bg);
             border-radius: 24px;
-            padding: 30px;
-            max-width: 800px;
-            margin: 0 auto;
+            padding: 20px;
             width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--card-shadow);
+            margin: 0 auto;
         }
         
         .engine-selector {
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 6px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -89,37 +168,51 @@
             background: transparent;
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 50px;
-            padding: 8px 20px;
-            font-size: 0.9rem;
+            padding: 6px 14px;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s;
-            color: rgba(0, 0, 0, 0.7);
+            color: var(--text-secondary);
             backdrop-filter: blur(5px);
         }
         
+        .dark-mode .engine-btn {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
         .engine-btn.active, .engine-btn:hover {
-            background: rgba(0, 0, 0, 0.03);
-            color: #000;
+            background: var(--icon-bg);
+            color: var(--text-color);
             border-color: rgba(0, 0, 0, 0.15);
+        }
+        
+        .dark-mode .engine-btn.active, 
+        .dark-mode .engine-btn:hover {
+            border-color: rgba(255, 255, 255, 0.2);
         }
         
         .search-box {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             position: relative;
         }
         
         .search-input {
             flex: 1;
-            padding: 16px 25px;
+            padding: 14px 20px;
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 50px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             background: rgba(255, 255, 255, 0.6);
-            color: #000;
+            color: var(--text-color);
             outline: none;
             transition: all 0.3s;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+        
+        .dark-mode .search-input {
+            background: rgba(30, 30, 40, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .search-input:focus {
@@ -132,64 +225,75 @@
             border: none;
             border-radius: 50px;
             color: white;
-            padding: 0 35px;
-            font-size: 1.1rem;
+            padding: 0 25px;
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dark-mode .search-btn {
+            background: rgba(255, 255, 255, 0.15);
         }
         
         .search-btn:hover {
             background: rgba(0, 0, 0, 0.9);
         }
         
+        .dark-mode .search-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
         .content-wrapper {
             display: flex;
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
+            flex-direction: column;
+            gap: 20px;
             width: 100%;
         }
         
         .sidebar {
-            width: 300px;
+            width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
         }
         
         .main-content {
-            flex: 1;
+            width: 100%;
         }
         
         .card {
-            background: rgba(255, 255, 255, 0.65);
-            border-radius: 24px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--card-shadow);
             backdrop-filter: blur(8px);
             transition: all 0.3s;
+            margin-bottom: 15px;
         }
         
         .card-title {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             font-weight: 500;
-            color: rgba(0, 0, 0, 0.8);
+            color: var(--text-color);
         }
         
         .card-title i {
-            font-size: 1.4rem;
-            color: rgba(0, 0, 0, 0.6);
+            font-size: 1.3rem;
+            color: var(--text-secondary);
         }
         
         .weather-widget {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
         
         .weather-header {
@@ -199,51 +303,135 @@
         }
         
         .location {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 500;
         }
         
         .weather-main {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin: 10px 0;
+            gap: 12px;
+            margin: 8px 0;
         }
         
         .weather-icon {
-            font-size: 3.5rem;
-            color: #007AFF;
+            font-size: 2.8rem;
+            color: var(--primary-color);
         }
         
         .temperature {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 300;
         }
         
         .weather-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 12px;
         }
         
         .weather-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.95rem;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
         
         .weather-item i {
-            width: 24px;
+            width: 20px;
             text-align: center;
-            color: rgba(0, 0, 0, 0.5);
+            color: var(--text-secondary);
+        }
+        
+        .translation-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .translation-input {
+            padding: 12px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-color);
+            outline: none;
+            transition: all 0.3s;
+            resize: none;
+            height: 100px;
+        }
+        
+        .dark-mode .translation-input {
+            background: rgba(30, 30, 40, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .translation-input:focus {
+            border-color: rgba(0, 122, 255, 0.3);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+        
+        .translation-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .language-select {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-color);
+            outline: none;
+        }
+        
+        .dark-mode .language-select {
+            background: rgba(30, 30, 40, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .translate-btn {
+            background: var(--accent-color);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .translate-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .translation-result {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 16px;
+            padding: 16px;
+            min-height: 80px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .dark-mode .translation-result {
+            background: rgba(255, 255, 255, 0.05);
         }
         
         .quick-links-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 12px;
         }
         
         .link-item {
@@ -251,114 +439,309 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 18px;
-            padding: 20px 10px;
+            background: var(--icon-bg);
+            border-radius: 16px;
+            padding: 15px 8px;
             transition: all 0.3s;
             cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--glass-border);
             text-decoration: none;
-            color: rgba(0, 0, 0, 0.8);
+            color: var(--text-color);
+            min-height: 90px;
         }
         
         .link-item:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--link-hover-bg);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
         }
         
         .link-icon {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            margin-bottom: 12px;
-            font-size: 1.8rem;
-            background: rgba(0, 0, 0, 0.03);
+            margin-bottom: 8px;
+            font-size: 1.5rem;
+            background: var(--icon-bg);
         }
         
         .link-title {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 500;
             text-align: center;
+            line-height: 1.3;
         }
         
         .quick-links-section {
-            margin-top: 20px;
-        }
-        
-        .quick-links-grid.large {
-            grid-template-columns: repeat(4, 1fr);
+            margin-top: 15px;
         }
         
         .section-title {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
             font-weight: 500;
-            color: rgba(0, 0, 0, 0.8);
+            color: var(--text-color);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .section-title i {
-            color: rgba(0, 0, 0, 0.5);
+            color: var(--text-secondary);
         }
         
         .footer {
             text-align: center;
-            padding: 25px;
+            padding: 20px 10px;
             opacity: 0.7;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 300;
-            margin-top: 30px;
+            margin-top: 10px;
+            color: var(--text-secondary);
+        }
+        
+        /* 设置面板 */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100vh;
+            background: var(--setting-panel-bg);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            z-index: 1000;
+            transition: right 0.4s ease;
+            overflow-y: auto;
+        }
+        
+        .settings-panel.active {
+            right: 0;
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark-mode .settings-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .settings-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+        
+        .close-settings {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .settings-group {
+            margin-bottom: 25px;
+        }
+        
+        .settings-group-title {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .settings-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .setting-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        
+        .dark-mode .setting-option {
+            background: rgba(30, 30, 40, 0.4);
+        }
+        
+        .setting-option:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+        
+        .dark-mode .setting-option:hover {
+            background: rgba(40, 40, 50, 0.6);
+        }
+        
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 22px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        
+        select {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-color);
+            outline: none;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+        
+        .dark-mode select {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(30, 30, 40, 0.6);
         }
         
         /* 响应式调整 */
-        @media (max-width: 1100px) {
-            .content-wrapper {
-                flex-direction: column;
+        @media (min-width: 576px) {
+            .container {
+                gap: 25px;
             }
             
-            .sidebar {
-                width: 100%;
-                flex-direction: row;
-                flex-wrap: wrap;
+            .logo {
+                font-size: 2.5rem;
             }
             
-            .weather-widget {
-                flex: 1;
-                min-width: 300px;
-            }
-            
-            .quick-links {
-                flex: 2;
-                min-width: 300px;
-            }
-        }
-        
-        @media (max-width: 768px) {
             .search-section {
-                padding: 20px;
+                padding: 25px;
             }
             
-            .search-input {
-                padding: 14px 20px;
-            }
-            
-            .search-btn {
-                padding: 0 25px;
+            .engine-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
             }
             
             .quick-links-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 15px;
             }
             
-            .weather-main {
-                flex-direction: column;
-                text-align: center;
+            .link-item {
+                padding: 18px 10px;
+                min-height: 100px;
+            }
+            
+            .link-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .container {
+                gap: 30px;
+            }
+            
+            .logo {
+                font-size: 2.8rem;
+            }
+            
+            .mobile-header {
+                display: none;
+            }
+            
+            .content-wrapper {
+                flex-direction: row;
+            }
+            
+            .sidebar {
+                width: 35%;
+                max-width: 320px;
+            }
+            
+            .main-content {
+                width: 65%;
+            }
+            
+            .settings-panel {
+                width: 380px;
+                right: -400px;
+            }
+            
+            .settings-panel.active {
+                right: 0;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .search-section {
+                max-width: 800px;
+            }
+            
+            .sidebar {
+                width: 30%;
+            }
+            
+            .main-content {
+                width: 70%;
             }
         }
         
@@ -374,7 +757,7 @@
         
         /* 滚动条样式 */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
         
         ::-webkit-scrollbar-track {
@@ -382,9 +765,47 @@
             border-radius: 10px;
         }
         
+        .dark-mode ::-webkit-scrollbar-track {
+            background: rgba(30, 30, 40, 0.3);
+        }
+        
         ::-webkit-scrollbar-thumb {
             background: rgba(0, 0, 0, 0.1);
             border-radius: 10px;
+        }
+        
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 移动设备菜单按钮 */
+        .mobile-menu-btn {
+            display: none;
+            background: var(--icon-bg);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            backdrop-filter: blur(5px);
+        }
+        
+        @media (max-width: 767px) {
+            .desktop-header {
+                display: none;
+            }
+            
+            .mobile-header {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
         }
     </style>
 </head>
@@ -393,11 +814,31 @@
     <div class="glass-layer"></div>
     
     <div class="container">
-        <header>
-            <div class="logo">Search</div>
-            <div class="tagline">简洁 · 高效 · 优雅</div>
-        </header>
+        <!-- 桌面端头部 -->
+        <div class="desktop-header">
+            <header>
+                <div class="logo">Search</div>
+                <div class="tagline">简洁 · 高效 · 优雅</div>
+                <button class="settings-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </header>
+        </div>
         
+        <!-- 移动端头部 -->
+        <div class="mobile-header">
+            <div class="logo">LG</div>
+            <div class="mobile-nav">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button class="settings-btn" id="mobileSettingsBtn">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 搜索区域 -->
         <section class="search-section">
             <div class="engine-selector">
                 <button class="engine-btn active" data-engine="baidu">百度</button>
@@ -409,18 +850,21 @@
             <div class="search-box">
                 <input type="text" class="search-input" id="searchInput" placeholder="输入搜索内容...">
                 <button class="search-btn" id="searchBtn">
-                    <i class="fas fa-search"></i> 搜索
+                    <i class="fas fa-search"></i>
+                    <span class="desktop-text">搜索</span>
                 </button>
             </div>
         </section>
         
+        <!-- 主要内容区域 -->
         <div class="content-wrapper">
+            <!-- 侧边栏 -->
             <div class="sidebar">
                 <!-- 天气组件 -->
                 <div class="card weather-widget">
                     <div class="weather-header">
                         <div class="location">上海</div>
-                        <div class="date">6月15日 星期六</div>
+                        <div class="date" id="currentDate">6月15日 星期六</div>
                     </div>
                     
                     <div class="weather-main">
@@ -450,6 +894,33 @@
                     </div>
                 </div>
                 
+                <!-- 翻译功能 -->
+                <div class="card translation-card">
+                    <h2 class="card-title"><i class="fas fa-language"></i> 翻译功能</h2>
+                    <div class="translation-box">
+                        <textarea class="translation-input" id="translationInput" placeholder="输入要翻译的文本..."></textarea>
+                        <div class="translation-controls">
+                            <select id="languageSelect">
+                                <option value="en">英语</option>
+                                <option value="ja">日语</option>
+                                <option value="ko">韩语</option>
+                                <option value="fr">法语</option>
+                                <option value="es">西班牙语</option>
+                                <option value="ru">俄语</option>
+                            </select>
+                            <button class="translate-btn" id="translateBtn">
+                                <i class="fas fa-exchange-alt"></i> <span>翻译</span>
+                            </button>
+                        </div>
+                        <div class="translation-result" id="translationResult">
+                            翻译结果将显示在这里...
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 主内容区 -->
+            <div class="main-content">
                 <!-- 快捷链接 -->
                 <div class="card quick-links">
                     <h2 class="card-title"><i class="fas fa-link"></i> 快捷访问</h2>
@@ -492,12 +963,11 @@
                         </a>
                     </div>
                 </div>
-            </div>
-            
-            <div class="main-content">
+                
+                <!-- 推荐网站 -->
                 <div class="card">
                     <h2 class="section-title"><i class="fas fa-star"></i> 推荐网站</h2>
-                    <div class="quick-links-grid large">
+                    <div class="quick-links-grid">
                         <a href="https://www.apple.com" class="link-item" target="_blank">
                             <div class="link-icon" style="background-color: rgba(166,166,166,0.1); color: #A6A6A6;">
                                 <i class="fab fa-apple"></i>
@@ -534,23 +1004,11 @@
                             </div>
                             <div class="link-title">Figma</div>
                         </a>
-                        <a href="https://dribbble.com" class="link-item" target="_blank">
-                            <div class="link-icon" style="background-color: rgba(234,76,137,0.1); color: #EA4C89;">
-                                <i class="fab fa-dribbble"></i>
-                            </div>
-                            <div class="link-title">Dribbble</div>
-                        </a>
-                        <a href="https://www.adobe.com" class="link-item" target="_blank">
-                            <div class="link-icon" style="background-color: rgba(255,0,0,0.1); color: #FF0000;">
-                                <i class="fab fa-adobe"></i>
-                            </div>
-                            <div class="link-title">Adobe</div>
-                        </a>
                     </div>
                     
                     <div class="quick-links-section">
                         <h2 class="section-title"><i class="fas fa-graduation-cap"></i> 学习资源</h2>
-                        <div class="quick-links-grid large">
+                        <div class="quick-links-grid">
                             <a href="https://www.coursera.org" class="link-item" target="_blank">
                                 <div class="link-icon" style="background-color: rgba(0,115,177,0.1); color: #0073B1;">
                                     <i class="fas fa-graduation-cap"></i>
@@ -582,8 +1040,126 @@
         </div>
         
         <footer class="footer">
-            © 2025 浏览器首页 | 简洁设计 · 高效体验
+            © 2023 液态玻璃浏览器首页 | 简洁设计 · 高效体验
         </footer>
+    </div>
+    
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h2 class="settings-title">设置</h2>
+            <button class="close-settings" id="closeSettings">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="settings-group">
+            <h3 class="settings-group-title"><i class="fas fa-paint-brush"></i> 外观设置</h3>
+            <div class="settings-options">
+                <div class="setting-option">
+                    <div class="option-label">
+                        <i class="fas fa-moon"></i>
+                        <span>暗色模式</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-option">
+                    <div class="option-label">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>自动日/夜间模式</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autoThemeToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3 class="settings-group-title"><i class="fas fa-globe"></i> 语言设置</h3>
+            <div class="settings-options">
+                <div class="setting-option">
+                    <div class="option-label">
+                        <i class="fas fa-language"></i>
+                        <span>界面语言</span>
+                    </div>
+                    <select id="languageSelectSetting">
+                        <option value="zh-CN">简体中文</option>
+                        <option value="en-US">English</option>
+                        <option value="ja-JP">日本語</option>
+                        <option value="ko-KR">한국어</option>
+                    </select>
+                </div>
+                
+                <div class="setting-option">
+                    <div class="option-label">
+                        <i class="fas fa-font"></i>
+                        <span>翻译目标语言</span>
+                    </div>
+                    <select id="translateLanguageSetting">
+                        <option value="en">英语</option>
+                        <option value="ja">日语</option>
+                        <option value="ko">韩语</option>
+                        <option value="fr">法语</option>
+                        <option value="es">西班牙语</option>
+                        <option value="ru">俄语</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3 class="settings-group-title"><i class="fas fa-search"></i> 搜索引擎</h3>
+            <div class="settings-options">
+                <div class="setting-option">
+                    <div class="option-label">
+                        <i class="fab fa-baidu"></i>
+                        <span>默认搜索引擎</span>
+                    </div>
+                    <select id="searchEngineSetting">
+                        <option value="baidu">百度</option>
+                        <option value="bing">必应</option>
+                        <option value="yandex">Yandex</option>
+                        <option value="sogou">搜狗</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3 class="settings-group-title"><i class="fas fa-sun"></i> 天气设置</h3>
+            <div class="settings-options">
+                <div class="setting-option">
+                    <div class="option-label">
+                        <i class="fas fa-location-dot"></i>
+                        <span>默认位置</span>
+                    </div>
+                    <select id="weatherLocationSetting">
+                        <option value="shanghai">上海</option>
+                        <option value="beijing">北京</option>
+                        <option value="guangzhou">广州</option>
+                        <option value="shenzhen">深圳</option>
+                        <option value="hangzhou">杭州</option>
+                    </select>
+                </div>
+                
+                <div class="setting-option">
+                    <div class="option-label">
+                        <i class="fas fa-ruler"></i>
+                        <span>温度单位</span>
+                    </div>
+                    <select id="temperatureUnitSetting">
+                        <option value="celsius">摄氏度 (°C)</option>
+                        <option value="fahrenheit">华氏度 (°F)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -596,12 +1172,58 @@
                 day: 'numeric',
                 weekday: 'long'
             };
-            document.querySelector('.date').textContent = now.toLocaleDateString('zh-CN', options);
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', options);
         }
         
         // 初始化和定期更新时间
         updateDateTime();
-        setInterval(updateDateTime, 60000); // 每分钟更新一次
+        setInterval(updateDateTime, 60000);
+        
+        // 设置面板功能
+        const settingsBtn = document.getElementById('settingsBtn');
+        const mobileSettingsBtn = document.getElementById('mobileSettingsBtn');
+        const closeSettings = document.getElementById('closeSettings');
+        const settingsPanel = document.getElementById('settingsPanel');
+        
+        settingsBtn.addEventListener('click', () => {
+            settingsPanel.classList.add('active');
+        });
+        
+        mobileSettingsBtn.addEventListener('click', () => {
+            settingsPanel.classList.add('active');
+        });
+        
+        closeSettings.addEventListener('click', () => {
+            settingsPanel.classList.remove('active');
+        });
+        
+        // 自动日/夜间模式切换
+        const autoThemeToggle = document.getElementById('autoThemeToggle');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        function updateTheme() {
+            if (autoThemeToggle.checked) {
+                const isNight = new Date().getHours() >= 18 || new Date().getHours() < 6;
+                document.body.classList.toggle('dark-mode', isNight);
+                darkModeToggle.checked = isNight;
+            } else {
+                document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+            }
+        }
+        
+        // 初始主题设置
+        updateTheme();
+        
+        // 监听主题变化
+        autoThemeToggle.addEventListener('change', updateTheme);
+        darkModeToggle.addEventListener('change', () => {
+            if (!autoThemeToggle.checked) {
+                document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+            }
+        });
+        
+        // 每小时检查一次时间更新主题
+        setInterval(updateTheme, 3600000);
         
         // 搜索引擎切换
         const engineBtns = document.querySelectorAll('.engine-btn');
@@ -647,9 +1269,56 @@
             searchInput.value = '';
         }
         
+        // 翻译功能
+        const translateBtn = document.getElementById('translateBtn');
+        const translationInput = document.getElementById('translationInput');
+        const translationResult = document.getElementById('translationResult');
+        const languageSelect = document.getElementById('languageSelect');
+        
+        translateBtn.addEventListener('click', performTranslation);
+        
+        function performTranslation() {
+            const text = translationInput.value.trim();
+            if (!text) return;
+            
+            const targetLang = languageSelect.value;
+            
+            // 显示加载状态
+            translationResult.innerHTML = '<div class="thinking"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+            
+            // 模拟API调用（实际应用中应使用真实翻译API）
+            setTimeout(() => {
+                let translatedText = "";
+                switch(targetLang) {
+                    case "en":
+                        translatedText = "This is an example translation result. In a real application, this text would be replaced with the actual translation from the API.";
+                        break;
+                    case "ja":
+                        translatedText = "これは翻訳結果の例です。実際のアプリケーションでは、このテキストはAPIからの実際の翻訳に置き換えられます。";
+                        break;
+                    case "ko":
+                        translatedText = "이것은 번역 결과의 예입니다. 실제 애플리케이션에서는 이 텍스트가 API의 실제 번역으로 대체됩니다.";
+                        break;
+                    case "fr":
+                        translatedText = "Ceci est un exemple de résultat de traduction. Dans une application réelle, ce texte serait remplacé par la traduction réelle de l'API.";
+                        break;
+                    case "es":
+                        translatedText = "Este es un resultado de traducción de ejemplo. En una aplicación real, este texto sería reemplazado por la traducción real de la API.";
+                        break;
+                    case "ru":
+                        translatedText = "Это пример результата перевода. В реальном приложении этот текст будет заменен фактическим переводом из API.";
+                        break;
+                    default:
+                        translatedText = "翻译结果示例。在实际应用中，此文本将被API的实际翻译所替换。";
+                }
+                
+                translationResult.textContent = translatedText;
+            }, 1500);
+        }
+        
         // 模拟天气数据更新
         function updateWeather() {
-            const locations = ['佛山'];
+            const locations = ['北京', '上海', '广州', '深圳', '杭州'];
             const weatherConditions = ['晴朗', '多云', '小雨', '局部阵雨', '阴天'];
             const randomLocation = locations[Math.floor(Math.random() * locations.length)];
             const randomTemp = Math.floor(Math.random() * 15) + 20; // 20-34°C
@@ -670,6 +1339,13 @@
         document.querySelectorAll('.link-item').forEach((item, index) => {
             item.style.animation = `fadeIn 0.5s ease-out ${index * 0.1}s forwards`;
             item.style.opacity = 0;
+        });
+        
+        // 移动端菜单按钮功能（预留）
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        mobileMenuBtn.addEventListener('click', () => {
+            // 这里可以添加移动端菜单功能
+            alert('移动端菜单功能待实现');
         });
     </script>
 </body>
